@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200">
+  <rect id="bg" width="300" height="200" fill="#e7fbeb"/>
+  <path id="sky_1" d="M0 0 H300 V90 H0 Z" fill="#b7e6ff"/>
+  <path id="hill_1" d="M0 160 Q70 115 160 160 Z" fill="#80c783"/>
+  <path id="hill_2" d="M130 165 Q220 95 300 165 Z" fill="#62ab66"/>
+  <path id="tree_trunk" d="M144 115 H162 V170 H144 Z" fill="#8a5d3b"/>
+  <path id="tree_top" d="M110 120 Q152 55 194 120 Q152 148 110 120 Z" fill="#3f8d4f"/>
+</svg>

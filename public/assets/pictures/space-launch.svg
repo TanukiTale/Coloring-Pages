@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200">
+  <rect id="bg" width="300" height="200" fill="#0a163c"/>
+  <path id="planet" d="M220 30 A36 36 0 1 1 219.9 30 Z" fill="#ffce76"/>
+  <path id="rocket_body" d="M130 120 L150 65 L170 120 Z" fill="#dce7ff"/>
+  <path id="rocket_fin_l" d="M130 120 L115 138 L132 136 Z" fill="#ef6a5d"/>
+  <path id="rocket_fin_r" d="M170 120 L185 138 L168 136 Z" fill="#ef6a5d"/>
+  <path id="smoke" d="M120 148 Q150 120 180 148 Q150 170 120 148 Z" fill="#9fb8e8"/>
+</svg>

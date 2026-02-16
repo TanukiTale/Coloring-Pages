@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200">
+  <rect id="bg" width="300" height="200" fill="#ffe5b8"/>
+  <path id="sea" d="M0 140 Q70 120 140 138 Q220 158 300 140 V200 H0 Z" fill="#6fb3d2"/>
+  <path id="ship_hull" d="M80 130 H210 L190 156 H96 Z" fill="#85522f"/>
+  <path id="mast" d="M145 80 H155 V130 H145 Z" fill="#6a4023"/>
+  <path id="sail" d="M155 82 L195 112 L155 126 Z" fill="#fff5e1"/>
+  <path id="flag" d="M155 80 L178 84 L155 89 Z" fill="#c83c32"/>
+</svg>
