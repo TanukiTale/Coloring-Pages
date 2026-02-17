@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import { AppChrome } from './components/AppChrome';
 import { AudioProvider } from './audio/AudioProvider';
 import { ThemeSelectionPage } from './pages/ThemeSelectionPage';
@@ -10,7 +10,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 
 export const App = (): JSX.Element => (
   <AudioProvider>
-    <BrowserRouter>
+    <HashRouter>
       <AppChrome>
         <Routes>
           <Route path="/" element={<ThemeSelectionPage />} />
@@ -21,7 +21,7 @@ export const App = (): JSX.Element => (
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AppChrome>
-    </BrowserRouter>
+    </HashRouter>
   </AudioProvider>
 );
 

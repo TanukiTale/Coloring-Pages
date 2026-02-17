@@ -347,3 +347,11 @@ Original prompt: You are an expert full-stack developer. Create a complete React
 - Verification:
   - `npm run build` passes.
   - Playwright smoke run captured `output/web-game-ios-audio-fix-2/shot-0.png` with no `errors-0.json` artifact.
+- Added GitHub Pages hosting support.
+  - Switched app router from `BrowserRouter` to `HashRouter` in `src/App.tsx` to avoid static-host refresh 404s on deep routes.
+  - Added Pages deployment workflow at `.github/workflows/deploy-pages.yml`:
+    - builds on push to `main`/`master` and manual dispatch,
+    - computes correct Vite `--base` automatically (`/` for user-site repos, `/<repo>/` for project sites),
+    - deploys `dist` with `actions/deploy-pages`.
+  - Added `public/.nojekyll` for Pages static serving compatibility.
+- Verification: `npm run build` passes after hosting changes.
