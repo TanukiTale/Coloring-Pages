@@ -1,5 +1,7 @@
 import { Difficulty, Picture, SvgRegionDefinition, SvgVariant, Theme } from '../models/domain';
 
+const assetUrl = (path: string): string => `${import.meta.env.BASE_URL}${path}`;
+
 const VIEW_BOX = '0 0 300 220';
 
 type VariantMap = Record<Difficulty, SvgVariant>;
@@ -261,7 +263,7 @@ const naturePictures: Picture[] = [
     themeId: 'nature',
     title: 'Forest Trail',
     description: 'A calm trail winding through green hills.',
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/pictures/nature-forest.svg',
+    thumbnailAsset: assetUrl('assets/pictures/nature-forest.svg'),
     variants: buildNatureVariants('nature-forest-trail', 0),
   }),
   picture({
@@ -269,7 +271,7 @@ const naturePictures: Picture[] = [
     themeId: 'nature',
     title: 'Waterfall Hollow',
     description: 'A valley with a bright river and misty ridge.',
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/themes/nature.svg',
+    thumbnailAsset: assetUrl('assets/themes/nature.svg'),
     variants: buildNatureVariants('nature-waterfall-hollow', 8),
   }),
   picture({
@@ -277,7 +279,7 @@ const naturePictures: Picture[] = [
     themeId: 'nature',
     title: 'Sunset Grove',
     description: 'Tall trees and warm sky bands at dusk.',
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/themes/nature.svg',
+    thumbnailAsset: assetUrl('assets/themes/nature.svg'),
     variants: buildNatureVariants('nature-sunset-grove', -10),
   }),
   picture({
@@ -285,7 +287,7 @@ const naturePictures: Picture[] = [
     themeId: 'nature',
     title: 'Meadow Song',
     description: 'Rolling meadows with layered trees and river bends.',
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/themes/nature.svg',
+    thumbnailAsset: assetUrl('assets/themes/nature.svg'),
     variants: buildNatureVariants('nature-meadow-song', 14),
   }),
   picture({
@@ -294,7 +296,7 @@ const naturePictures: Picture[] = [
     title: 'Emerald Fort',
     description: 'Bonus canvas unlocked by finishing nature paintings.',
     isBonus: true,
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/themes/nature.svg',
+    thumbnailAsset: assetUrl('assets/themes/nature.svg'),
     variants: buildNatureVariants('nature-bonus-emerald-fort', 20),
   }),
 ];
@@ -305,7 +307,7 @@ const spacePictures: Picture[] = [
     themeId: 'space',
     title: 'Launch Day',
     description: 'A classic rocket taking off beyond an alien horizon.',
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/pictures/space-launch.svg',
+    thumbnailAsset: assetUrl('assets/pictures/space-launch.svg'),
     variants: buildSpaceVariants('space-launch-day', 0),
   }),
   picture({
@@ -313,7 +315,7 @@ const spacePictures: Picture[] = [
     themeId: 'space',
     title: 'Moon Drift',
     description: 'Rings and moons floating in a deep sky.',
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/themes/space.svg',
+    thumbnailAsset: assetUrl('assets/themes/space.svg'),
     variants: buildSpaceVariants('space-moon-drift', -12),
   }),
   picture({
@@ -321,7 +323,7 @@ const spacePictures: Picture[] = [
     themeId: 'space',
     title: 'Orbit Hub',
     description: 'A bright star lane and a rocket near orbital lights.',
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/themes/space.svg',
+    thumbnailAsset: assetUrl('assets/themes/space.svg'),
     variants: buildSpaceVariants('space-orbit-hub', 10),
   }),
   picture({
@@ -329,7 +331,7 @@ const spacePictures: Picture[] = [
     themeId: 'space',
     title: 'Starlight Dunes',
     description: 'Colorful planetary dunes under a crowded sky.',
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/themes/space.svg',
+    thumbnailAsset: assetUrl('assets/themes/space.svg'),
     variants: buildSpaceVariants('space-starlight-dunes', 18),
   }),
   picture({
@@ -338,7 +340,7 @@ const spacePictures: Picture[] = [
     title: 'Nebula Crown',
     description: 'Bonus cosmic masterpiece with rich segment detail.',
     isBonus: true,
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/themes/space.svg',
+    thumbnailAsset: assetUrl('assets/themes/space.svg'),
     variants: buildSpaceVariants('space-bonus-nebula-crown', 24),
   }),
 ];
@@ -349,7 +351,7 @@ const piratePictures: Picture[] = [
     themeId: 'pirates',
     title: 'Hidden Cove',
     description: 'A cozy harbor with a pirate sloop and treasure chest.',
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/pictures/pirates-cove.svg',
+    thumbnailAsset: assetUrl('assets/pictures/pirates-cove.svg'),
     variants: buildPirateVariants('pirates-hidden-cove', 0),
   }),
   picture({
@@ -357,7 +359,7 @@ const piratePictures: Picture[] = [
     themeId: 'pirates',
     title: 'Map Room',
     description: 'Sails and sea lines framed by sandy treasure spots.',
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/themes/pirates.svg',
+    thumbnailAsset: assetUrl('assets/themes/pirates.svg'),
     variants: buildPirateVariants('pirates-map-room', 8),
   }),
   picture({
@@ -365,7 +367,7 @@ const piratePictures: Picture[] = [
     themeId: 'pirates',
     title: 'Storm Sloop',
     description: 'A ship cutting through sharper waves at dusk.',
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/themes/pirates.svg',
+    thumbnailAsset: assetUrl('assets/themes/pirates.svg'),
     variants: buildPirateVariants('pirates-storm-sloop', -10),
   }),
   picture({
@@ -373,7 +375,7 @@ const piratePictures: Picture[] = [
     themeId: 'pirates',
     title: 'Skull Shore',
     description: 'Golden sand and a chest waiting to be unlocked.',
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/themes/pirates.svg',
+    thumbnailAsset: assetUrl('assets/themes/pirates.svg'),
     variants: buildPirateVariants('pirates-skull-shore', 16),
   }),
   picture({
@@ -382,7 +384,7 @@ const piratePictures: Picture[] = [
     title: 'Golden Armada',
     description: 'Bonus pirate finale with high-detail hull segments.',
     isBonus: true,
-    thumbnailAsset: import.meta.env.BASE_URL + 'assets/themes/pirates.svg',
+    thumbnailAsset: assetUrl('assets/themes/pirates.svg'),
     variants: buildPirateVariants('pirates-bonus-golden-armada', 24),
   }),
 ];
@@ -395,7 +397,7 @@ export const themes: Theme[] = [
     name: 'Nature',
     description: 'Forests, meadows, waterfalls, and peaceful skies.',
     accentColor: '#3f9b5c',
-    coverAsset: import.meta.env.BASE_URL + 'assets/themes/nature.svg',
+    coverAsset: assetUrl('assets/themes/nature.svg'),
     pictureIds: naturePictures.filter((item) => !item.isBonus).map((item) => item.id),
     bonusPictureId: 'nature-bonus-emerald-fort',
   },
@@ -404,7 +406,7 @@ export const themes: Theme[] = [
     name: 'Space',
     description: 'Rockets, planets, and colorful nebula adventures.',
     accentColor: '#3d63d9',
-    coverAsset: import.meta.env.BASE_URL + 'assets/themes/space.svg',
+    coverAsset: assetUrl('assets/themes/space.svg'),
     pictureIds: spacePictures.filter((item) => !item.isBonus).map((item) => item.id),
     bonusPictureId: 'space-bonus-nebula-crown',
   },
@@ -413,7 +415,7 @@ export const themes: Theme[] = [
     name: 'Pirates',
     description: 'Ships, treasure chests, and island discoveries.',
     accentColor: '#c6782f',
-    coverAsset: import.meta.env.BASE_URL + 'assets/themes/pirates.svg',
+    coverAsset: assetUrl('assets/themes/pirates.svg'),
     pictureIds: piratePictures.filter((item) => !item.isBonus).map((item) => item.id),
     bonusPictureId: 'pirates-bonus-golden-armada',
   },
