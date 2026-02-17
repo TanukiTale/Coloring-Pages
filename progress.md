@@ -17,3 +17,333 @@ Original prompt: You are an expert full-stack developer. Create a complete React
   - Add seasonal event toggles and rotating content packs.
 - Cleaned generated artifacts from previous TypeScript build configuration and switched build script to `tsc --noEmit`.
 - Re-ran `npm run build`; production build is successful.
+- Fixed theme gallery tile count by changing `SET_SIZE` from 3 to 4 in `src/pages/ThemeGalleryPage.tsx` so each theme displays four regular pictures.
+- Re-ran `npm run build`; build still succeeds after the tile-count change.
+- Attempted Playwright visual verification via the skill client, but browser launch was blocked by sandbox permissions in this run.
+- Updated theme gallery previews so page cards render SVG-based previews instead of static theme art:
+  - Uncompleted pages now render black-and-white line art.
+  - Completed pages render from the saved completed session fills/background, so they appear colored after completion.
+- Verified with `npm run build` (success).
+- Ran Playwright client visual check (escalated) and inspected `output/web-game-check/shot-0.png`; Nature gallery now shows four unique black-and-white page previews.
+- Added delete support in My Gallery:
+  - New `deleteSessionById(sessionId)` in `src/services/storage.ts` removes a saved session and recomputes that theme's progress counters.
+  - `src/pages/MyGalleryPage.tsx` now shows a `Delete` action per completed entry with confirmation dialog and immediate UI update.
+  - Added `.gallery-item__actions` and `.danger-btn` styles in `src/styles.css`.
+- Re-ran `npm run build`; build succeeds after delete-gallery feature.
+- Updated My Gallery actions to a single horizontal row with `Open`, `Delete`, and `Share`.
+- Added per-item Share menu in `src/pages/MyGalleryPage.tsx` with:
+  - `Copy image` (clipboard PNG when supported),
+  - `Save image` (download PNG),
+  - `Email image` (native file-share when available, otherwise mailto fallback).
+- Extended `src/services/exportPng.ts` with reusable PNG helpers for gallery sharing/export.
+- Re-ran `npm run build`; build succeeds after share-action feature.
+- Fixed unfillable-region bug on medium/challenge caused by render order of nested shapes in `src/data/library.ts`.
+  - Root cause: concentric/contained regions (for example `sun-core` inside `sun-glow`) were drawn inner-to-outer, so larger outer regions sat on top and blocked clicks to inner regions while progress still counted them.
+  - Fix: reordered affected region definitions to outer-to-inner across Nature, Space, and Pirates medium/challenge variants (including sun/planet/moon/flame stacks).
+- Re-ran `npm run build`; build succeeds.
+- Re-ran Playwright smoke check with the develop-web-game client against `dist`; browser launch required escalation in this environment. Captured and inspected `output/web-game-check/shot-0.png` successfully.
+- TODO:
+  - Add automated regression coverage for nested-region layering/clickability once a test harness is introduced.
+- Replaced native browser dialogs in `src/pages/MyGalleryPage.tsx` with in-app UI:
+  - Added custom delete confirmation overlay (`Cancel`/`OK`) that preserves message text `Delete "<name>" from My Full Gallery?` and supports Escape to close.
+  - Added local toast/notice system (success/error/info) with auto-dismiss and manual close.
+  - Migrated copy/save/email/delete feedback from `window.alert` to in-app notices.
+- Added gallery-specific styles in `src/styles.css` for delete dialog and bottom toast variants/animation.
+- Verified with `npm run build` (success) and scanned `src` for native dialog calls (`window.confirm`/`window.alert`), none remain.
+- Updated brand-new page initialization and unfilled visuals:
+  - `src/pages/DifficultyPage.tsx`: new sessions now start with `initialBackground: '#ffffff'` so untouched pages open fully white.
+  - `src/services/storage.ts`: default fallback background changed to `#ffffff` for any session creation path without an explicit background.
+  - `src/pages/DifficultyPage.tsx`: difficulty preview now uses `colorfulUnfilled={false}` so unfilled vectors render white instead of preview colors.
+  - `src/pages/PaintPage.tsx`: palette "white" swatch changed from `#f8f9fa` to off-white `#f1eee6` for clearer filled-vs-unfilled distinction.
+- Re-ran `npm run build`; build succeeds.
+- Ran Playwright visual verification with the develop-web-game client on Vite dev server:
+  - Confirmed white-unfilled difficulty preview in `output/web-game-difficulty-new/shot-0.png`.
+  - Confirmed paint page opens fully white with off-white palette swatch in `output/web-game-paint-new/shot-0.png`.
+- Added full-gallery sort controls in `src/pages/MyGalleryPage.tsx`:
+  - New sort modes: Most recent, Theme (with Name as sub-sort), Name, and Duration.
+  - Sorting now happens on a derived gallery-entry list (session + picture + theme metadata) with stable tie-breakers.
+  - Updated gallery heading copy to remove fixed most-recent wording.
+- Added styles for the sort control in `src/styles.css` with mobile responsiveness.
+- Updated bonus reveal preview behavior in `src/components/BonusRevealModal.tsx`:
+  - Before full unlock (`bonusUnlocked === false`), preview now renders as black-and-white line art.
+  - Once fully unlocked, preview can render colorful-unfilled again.
+- Verification:
+  - Ran `npm run build` successfully.
+  - Ran Playwright smoke pass with the develop-web-game client and inspected `output/web-game-sort/shot-0.png`; app loads and navigates to `/gallery` without new console error artifacts in this run.
+  - Note: gallery was empty in this smoke run, so sort dropdown visibility with completed sessions still depends on user data presence.
+- Follow-up adjustment: kept `/gallery` scoped to completed sessions only (`getCompletedSessions`) while preserving new sort options and tie-break ordering.
+- Re-ran `npm run build` and Playwright smoke pass after this adjustment; build succeeds and smoke screenshot still renders without new error artifacts.
+- Improved `Copy image` browser compatibility in `src/pages/MyGalleryPage.tsx`:
+  - Added async clipboard path fallback for browsers that lack `ClipboardItem` support.
+  - New legacy fallback uses `document.execCommand('copy')` with `text/html` image payload to support partial-API browsers (e.g., embedded/alt Chromium builds).
+  - Updated unsupported message to point users to `Save image` when direct copy is unavailable.
+- Verified with `npm run build` (success).
+- Ran develop-web-game Playwright smoke check against `dist` with escalated browser launch permissions; captured `output/web-game-copy-fallback/shot-0.png` and confirmed normal app rendering.
+- Improved persistence and resume behavior across reloads/sessions:
+  - Hardened `src/services/storage.ts` state loading with migration-safe normalization so malformed/partial old localStorage data is recovered instead of reset.
+  - Added session lookup helpers to find the latest in-progress session by picture+difficulty and latest session map by theme.
+  - Updated `src/pages/DifficultyPage.tsx` to resume existing in-progress work for the selected picture+difficulty instead of always creating a new session.
+  - Updated `src/pages/ThemeGalleryPage.tsx` and `src/components/PictureCard.tsx` to show latest saved state (completed or in-progress), label cards as `Completed`/`In progress`, and open in-progress sessions directly.
+  - Updated `src/pages/MyGalleryPage.tsx` to include all saved sessions (not only completed), sort by latest activity for "Most recent", and render status-aware metadata.
+  - Updated `src/pages/ThemeSelectionPage.tsx` and `src/components/ThemeCard.tsx` to display per-theme in-progress counts alongside bonus unlock progress.
+- Verification:
+  - `npm run build` succeeds after the persistence/resume changes.
+  - Ran develop-web-game Playwright smoke capture after build (required escalation for browser launch in this environment); screenshot captured at `output/web-game-persistence/shot-0.png` and no new app console errors were emitted by the script.
+- TODO:
+  - Add an explicit "Start New" action when an in-progress session exists, so users can choose resume vs fresh copy from the difficulty screen.
+- Clarified theme-vs-gallery terminology on the theme detail screen:
+  - Updated `src/pages/ThemeGalleryPage.tsx` heading from `${theme.name} Gallery` to `${theme.name} Theme` so opening any theme (Nature/Space/Pirates) shows `Theme` at the top.
+- Verification:
+  - `npm run build` succeeds.
+  - Ran develop-web-game Playwright visual check (escalated browser launch) and inspected `output/web-game-theme-label/shot-0.png`; page heading renders as `Nature Theme`.
+- Re-ran validation after reconciling My Gallery file variant:
+  - `npm run build` succeeds.
+  - Playwright smoke screenshot regenerated at `output/web-game-persistence/shot-0.png` with no `errors-0.json` produced.
+- Cleanup: removed an unused storage selector export during final pass and re-ran `npm run build` (success).
+- Terminology cleanup: replaced all user-facing `My Full Gallery` labels with `My Gallery`.
+  - Updated top nav label in `src/components/AppChrome.tsx`.
+  - Updated theme page link copy in `src/pages/ThemeGalleryPage.tsx`.
+  - Updated delete confirmation + success notice copy in `src/pages/MyGalleryPage.tsx`.
+- Verification: `rg -n "My Full Gallery" src` returns no matches; `npm run build` succeeds.
+- Removed keyboard shortcut helper text from paint screen sidebar to reduce clutter on mobile-first usage.
+  - Deleted the `Shortcuts` block in `src/pages/PaintPage.tsx`.
+  - Removed unused `.keyboard-help` CSS from `src/styles.css`.
+- Verification: `npm run build` succeeds.
+- Removed the in-canvas selected-color indicator circle from paint view to reduce visual clutter.
+  - Deleted the top-left `<circle>` overlay in `src/components/PaintingCanvas.tsx`.
+  - Removed now-unused `selectedColor` prop from `PaintingCanvas` and its call site in `src/pages/PaintPage.tsx`.
+- Verification: `npm run build` succeeds.
+- Fixed paint-page canvas framing so artwork no longer sits inside an oversized patterned frame with extra top/bottom filler space.
+  - `src/components/PaintingCanvas.tsx`: derive stage aspect ratio from SVG `viewBox` and pass it as `--stage-aspect-ratio` CSS variable.
+  - `src/styles.css`: made `.paint-stage` use `aspect-ratio: var(--stage-aspect-ratio)` with full-bleed `.paint-stage__svg` sizing (`width/height: 100%`) and removed max-height constraints that caused letterboxing.
+  - `src/styles.css`: set `.paint-layout` to `align-items: start` and kept canvas card `min-height: 0` to prevent stretched empty space under the image.
+- Verification:
+  - `npm run build` succeeds.
+  - Ran develop-web-game Playwright check and inspected `output/web-game-canvas-fit/shot-0.png`; paint artwork now fills its frame without the previous extra gray top/bottom gap.
+- Bonus reveal modal behavior update: keep unlocked bonus preview black-and-white.
+  - `src/components/BonusRevealModal.tsx`: changed preview `SvgThumbnail` to `colorfulUnfilled={false}` unconditionally, so the full bonus remains line art in the reveal modal even after unlock.
+- Verification: `npm run build` succeeds.
+- Updated paint workspace layout so the palette/controls card is stacked underneath the image canvas card.
+  - `src/pages/PaintPage.tsx`: reordered `paint-layout` children to render canvas first, palette/toolbar card second.
+  - `src/styles.css`: changed `.paint-layout` to a single-column stack and centered both cards with a shared max width.
+- Verification:
+  - `npm run build` passed.
+  - Captured full-page visual check at `output/web-game-palette-under/full-page.png` showing the new card order (image card above, palette card below).
+- Added native two-finger pinch zoom support on the paint canvas:
+  - `src/components/PaintingCanvas.tsx` now tracks active pointers and computes pinch scale from finger distance deltas.
+  - Pinch uses midpoint anchoring so repeated pinch-in/pinch-out keeps zooming naturally under the fingers.
+  - Existing one-pointer drag pan behavior is preserved; pinch temporarily disables drag mode.
+- Expanded zoom range for detailed coloring work:
+  - `src/pages/PaintPage.tsx` now uses `MAX_ZOOM = 8` (was effectively `3`) with shared clamp bounds for keyboard, toolbar, and gesture updates.
+  - Added shared zoom+pan updater so gesture zoom writes into the same viewport state pipeline as button/keyboard zoom.
+- UX polish:
+  - `src/styles.css` disables SVG transform transition during active drag/pinch for smoother finger-tracking.
+- Verification:
+  - `npm run build` passes.
+  - Ran develop-web-game Playwright client against Vite route and inspected `output/web-game-pinch/shot-0.png`; paint page renders correctly after changes.
+  - `output/web-game-pinch/errors-0.json` still reports a generic 404 resource load (pre-existing asset-path issue), with no new runtime exception tied to pinch logic.
+- Note:
+  - The current Playwright client flow in this repo validates render/smoke state but does not simulate multi-touch pinch directly; gesture behavior is implemented via Pointer Events and should be validated on an actual touch device/browser session.
+- Follow-up touch fix for pinch integration:
+  - `src/components/PaintingCanvas.tsx`: limited `setPointerCapture` to active pinch/drag gestures instead of every touch-down, reducing risk of interfering with single-tap fill at 1x zoom.
+- Re-verified after the adjustment:
+  - `npm run build` passes.
+  - Re-ran develop-web-game Playwright smoke (`output/web-game-pinch/shot-0.png`) and rechecked `errors-0.json`; only the same pre-existing generic 404 resource warning remains.
+- Improved zoom UX to prevent artwork getting lost off-screen and added top-of-canvas zoom slider:
+  - `src/pages/PaintPage.tsx`:
+    - Zoom bounds changed to `MIN_ZOOM = 1` and `MAX_ZOOM = 5` (100%-500%).
+    - Added top canvas zoom control (`input[type=range]`) with live percentage box.
+    - Keyboard `+/-/0` now routes through shared `updateZoom` behavior.
+    - Non-gesture zoom changes recenter pan to `{x:0,y:0}` for predictable framing.
+  - `src/components/PaintingCanvas.tsx`:
+    - Added pan-bound clamping based on container size and zoom so drag/pinch cannot move image completely off-screen.
+    - Applied clamping for both pinch-driven pan and one-finger drag pan.
+  - `src/styles.css`:
+    - Added compact `paint-zoom-control` styling and responsive behavior.
+- Verification:
+  - `npm run build` passes.
+  - Playwright visual smoke screenshot captured at `output/web-game-zoom-slider/shot-0.png` shows slider at top of paint card with live `100%` indicator.
+  - No `errors-0.json` was produced in this run (no captured console errors).
+- Theme page cleanup and bonus emphasis update:
+  - Removed the action row under themes by deleting `Generate New Set` and `View My Gallery` from `src/pages/ThemeGalleryPage.tsx`.
+  - Added a thin gold border around the entire bonus card container in `src/styles.css` via `.bonus-card-wrap` so the bonus card is visually highlighted at the card level (not just the inner image).
+- Verification:
+  - `npm run build` succeeds.
+  - `rg -n "Generate New Set|View My Gallery|row-actions" src` returns no matches.
+- Bonus reveal masking fix (hidden quadrants should not leak image details):
+  - `src/styles.css`: changed `.bonus-modal__quadrant` background from semi-transparent `rgba(19, 29, 47, 0.9)` to opaque `#1a2438` so unrevealed quadrants fully cover the bonus art.
+- Verification:
+  - `npm run build` succeeds.
+  - Ran develop-web-game Playwright smoke check (required escalation for browser launch) with no launch/runtime failures in the escalated run.
+  - Note: this smoke pass did not navigate to a live bonus-unlock state, so modal-specific visual confirmation is based on the CSS change itself.
+- Added per-theme reset flow to restart a theme without deleting gallery history.
+  - Data model: `PaintingSession` now supports `archivedFromTheme` (default `false`) so old theme runs can stay in My Gallery but stop affecting active theme progression.
+  - Storage changes in `src/services/storage.ts`:
+    - Added `resetThemeProgressByThemeId(themeId)`.
+    - Reset marks all non-archived sessions for that theme as `archivedFromTheme: true` and sets theme progress to `0/4` with `bonusUnlocked: false`.
+    - Theme progression selectors now ignore archived sessions (`buildThemeProgressFromSessions`, `recomputeThemeProgressForTheme`, latest-in-progress lookups, and latest-session map by theme).
+    - Completing an archived session no longer increments theme unlock progress.
+  - UI changes:
+    - `src/components/ThemeCard.tsx`: each theme card now includes a `Reset theme` button.
+    - `src/pages/ThemeSelectionPage.tsx`: added reset confirmation modal with explicit warning text and explicit statement that My Gallery items are not removed.
+    - `src/pages/ThemeGalleryPage.tsx`: removed `(ready!)` suffix; text now always reads `Bonus progress: X/4 quadrants unlocked`.
+    - `src/styles.css`: added styles for theme card wrapper/reset button and reset modal width.
+- Verification:
+  - `npm run build` passes.
+  - Playwright reset flow check: `output/web-game-theme-reset/reset-check.json` confirms after reset that the seeded session still exists, is archived, and theme progress is reset to zero.
+  - Captured reset UI screenshots:
+    - `output/web-game-theme-reset/before-reset.png`
+    - `output/web-game-theme-reset/reset-modal.png`
+    - `output/web-game-theme-reset/after-reset.png`
+  - Playwright theme gallery post-reset check: `output/web-game-theme-reset/theme-gallery-check.json` confirms no bonus card, no status labels, and `Bonus progress: 0/4 quadrants unlocked` with screenshot `output/web-game-theme-reset/nature-after-reset.png`.
+- Added My Gallery filtering while preserving existing sort controls:
+  - `src/pages/MyGalleryPage.tsx` now includes filter state and controls for:
+    - `Filter by`: All images / Completed only
+    - `Theme`: All themes or a specific theme
+    - `Page`: All pages or a specific page (scoped to selected theme when applicable)
+  - Filtering is applied before sorting so existing sort modes continue to work on the filtered subset.
+  - Added filter guard effects so invalid theme/page selections are reset when data changes.
+  - Added no-results filtered state with `Clear filters` action.
+- Added filter layout styles in `src/styles.css` (`gallery-controls`, `gallery-filter`) with responsive stacking on mobile.
+- Verification:
+  - `npm run build` passes.
+  - Ran develop-web-game Playwright smoke on `/gallery` and inspected `output/web-game-gallery-filter/shot-0.png`.
+  - This smoke run had no saved sessions, so the page showed existing empty state and not filter controls (controls still render when gallery entries exist).
+  - No `errors-0.json` file was emitted in this run.
+- Updated Reset Theme control placement and style per UX request:
+  - `src/components/ThemeCard.tsx`: removed separate external reset button and moved reset control inside each theme card footer.
+  - Added bottom-row layout so bonus status stays on the bottom-left and `Reset theme` appears as a red link on the bottom-right.
+- Updated reset warning copy in `src/pages/ThemeSelectionPage.tsx`:
+  - Explicitly states this resets the entire selected theme (not the entire app).
+  - Explicitly states all images in that theme reset, including the bonus image.
+  - Keeps explicit statement that My Gallery items are not removed.
+- Updated card styles in `src/styles.css` to support in-card footer/link structure (`.theme-card__select`, `.theme-card__footer`, `.theme-card__reset-link`).
+- Verification:
+  - `npm run build` passes.
+  - Visual validation screenshots:
+    - `output/web-game-theme-reset-link/theme-cards.png` (reset link inside each card, bottom-right).
+    - `output/web-game-theme-reset-link/reset-modal.png` (updated warning copy).
+- Centered top-nav label text (`Themes`, `My Gallery`) within their pill buttons.
+  - `src/styles.css`: updated `.app-header__nav a` to `display: inline-flex` with centered alignment (`align-items` / `justify-content`) and `text-align: center`.
+- Verification: `npm run build` passes.
+- Expanded My Gallery `Filter by` status options in `src/pages/MyGalleryPage.tsx`:
+  - Added `Still in progress` alongside `All images` and `Completed only`.
+  - Updated status filter predicate to support all three states (`all`, `completed`, `in-progress`).
+- Verification:
+  - `npm run build` passes.
+  - Playwright `/gallery` smoke rerun completed with screenshot refresh at `output/web-game-gallery-filter/shot-0.png` and no `errors-0.json` emitted.
+- Added app-wide sound system with independent mute toggles for background music and paint-click pop effects.
+  - New `src/audio/AudioProvider.tsx` creates a Web Audio engine with:
+    - low-volume soothing ambient background music (triangle-oscillator chord with gentle low-pass modulation),
+    - short satisfying pop effect for paint vector clicks,
+    - independent `musicMuted` and `effectsMuted` state + toggles,
+    - user-gesture audio start handling for browser autoplay restrictions.
+  - New `src/audio/audioSettings.ts` persists sound preferences in localStorage under `coloring-quest:audio:v1`.
+  - `src/App.tsx` now wraps the app with `AudioProvider`.
+  - `src/components/AppChrome.tsx` now exposes header sound toggles: `Music On/Off` and `Pop On/Off`.
+  - `src/pages/PaintPage.tsx` now calls `playPop()` on every vector-region click before fill logic.
+  - `src/styles.css` adds header audio control styling and responsive behavior.
+- Verification:
+  - `npm run build` succeeds.
+  - Playwright smoke check run against Vite dev server captured `output/web-game-audio/shot-0.png` showing new header sound toggles and paint page rendering.
+  - `output/web-game-audio/errors-0.json` still shows the same generic resource 404 warning seen in prior runs (no new runtime exception from audio changes).
+- TODO:
+  - Optional next iteration: add per-theme track selection and adjustable music/effects volume sliders.
+- Investigated user-reported gray/non-counting vector gaps where image could show complete despite visible unfilled area.
+- Root cause: Nature variants had uncovered canvas areas (not part of any region path), so those areas appeared as gray/no-border in previews and were not counted toward completion.
+- Added region coverage fix in `src/data/library.ts` for Nature variants:
+  - Easy: expanded `sky` from height `118` to full `220`.
+  - Medium: expanded `sky-low` from height `58` to `160` (covers to y=220).
+  - Challenge: expanded `sky-band-3` from height `48` to `150` (covers to y=220).
+- Verification:
+  - `npm run build` passes.
+  - Pixel-coverage audit before fix showed uncovered Nature areas (up to ~12.88%).
+  - Pixel-coverage audit after fix (`output/web-game-region-audit/uncovered-report-after.json`) shows no uncovered pixels for any picture/difficulty.
+  - Visual sanity screenshot captured at `output/web-game-region-audit/nature-gallery-after-fix.png`.
+- Reworked audio system to address quiet/monotone music and laser-like pop SFX.
+  - `src/audio/AudioProvider.tsx`:
+    - Added theme-aware music sequencing with distinct loop patterns for `nature`, `space`, and `pirates` plus a `default` loop.
+    - Replaced static drone oscillators with a step scheduler that layers lead/bass/pad notes (varied pitch over time).
+    - Increased music loudness by raising active music bus gain target to `0.13` and adding a compressor chain for stronger perceived volume.
+    - Added `setMusicTheme(themeId)` API to switch tracks at runtime without reloading.
+    - Replaced pop effect with a short thump+noise transient (mouth-pop style) and raised effect level.
+  - `src/components/AppChrome.tsx`:
+    - Added route-based theme music switching for `/theme/:themeId` and `/theme/:themeId/pick`; falls back to `default` music on non-theme routes.
+  - `src/pages/PaintPage.tsx`:
+    - Sets current music theme from the loaded painting session theme while on `/paint/:sessionId`.
+- Verification:
+  - `npm run build` passes.
+  - Playwright smoke check ran successfully (`output/web-game-audio-refresh/shot-0.png`) with no `errors-0.json` emitted in this run.
+  - Note: automated checks can validate runtime errors/UI, but subjective loudness/tone quality still needs ear validation in the browser.
+- Audio UX refinement pass for louder sound + compact controls:
+  - Increased music loudness in `src/audio/AudioProvider.tsx` by raising active music bus target from `0.13` to `0.20` and keeping compressor chain.
+  - Added pop mode state (`popMode`) with persisted settings migration in `src/audio/audioSettings.ts`:
+    - New modes: `Pop 1`, `Pop 2`, `Pop 3`, `Pop 4`, and `Pop Off` (`0`).
+    - Backward compatibility: old `effectsMuted` maps to `popMode=0`, otherwise defaults to `1`.
+  - Replaced old binary pop mute toggle with cycling behavior in `src/audio/AudioProvider.tsx` + `src/components/AppChrome.tsx`:
+    - Each click cycles `1 -> 2 -> 3 -> 4 -> Off -> 1`.
+    - `playPop()` now renders four distinct pop timbres/contours based on selected mode.
+  - Header control restyle in `src/styles.css`:
+    - Smaller compact sound buttons.
+    - Green for active states.
+    - Light-red for off states with red diagonal strike from top-right to bottom-left (`.sound-toggle.is-off::after`).
+    - Music button text now always `Music`; pop button shows current mode label.
+- Verification:
+  - `npm run build` passes.
+  - Playwright visual checks captured:
+    - `output/web-game-audio-controls/on-state.png`
+    - `output/web-game-audio-controls/music-off-pop2.png`
+    - `output/web-game-audio-controls/pop-off.png`
+- Refined pop-mode differentiation per request (`pop`, `clap`, `laser`, `horn`) in `src/audio/AudioProvider.tsx`:
+  - Mode 1 (`Pop 1`): low thump + short air-noise burst.
+  - Mode 2 (`Pop 2`): triple high-frequency noise burst stack (clap-like).
+  - Mode 3 (`Pop 3`): descending resonant sawtooth sweep (laser-like).
+  - Mode 4 (`Pop 4`): dual square-wave short horn envelope.
+- Increased music loudness again by raising music gain target to `0.20`.
+- Verification:
+  - `npm run build` passes.
+  - Playwright smoke run (`output/web-game-audio-modes/shot-0.png`) completed with no `errors-0.json` artifact.
+- Simplified header audio controls per latest request: single `Pop` toggle and fully matched on/off colors with `Music`.
+  - `src/components/AppChrome.tsx`:
+    - Removed stale pop-mode UI wiring (`popMode`, `cyclePopMode`, dynamic pop labels).
+    - Wired header to current boolean effects state (`effectsMuted`, `toggleEffectsMuted`).
+    - Pop button label is now always exactly `Pop`.
+  - `src/audio/audioSettings.ts`:
+    - Migrated persisted schema back to `{ musicMuted, effectsMuted }`.
+    - Added compatibility migration so older `popMode` values still load correctly (`0` => muted, `1..4` => unmuted).
+  - `src/styles.css`:
+    - Reduced sound button size (padding/font/min-width) for a more compact header footprint.
+    - Locked both buttons to the same exact on/off palette:
+      - On: light green (`#d8f4e0`) with green border/text.
+      - Off: light red (`#ffe4e4`) with red border/text and diagonal slash.
+- Verification:
+  - `npm run build` passes.
+  - Playwright visual smoke check against `dist` captured `output/web-game-audio-fix/shot-0.png`; header shows `Music` and `Pop` in matching green on-state styles.
+  - No `errors-0.json` was emitted for this run.
+- Fixed likely iPhone Safari audio unlock failure in `src/audio/AudioProvider.tsx`.
+  - Root issue addressed: unlock listeners were removed after the first interaction attempt even when the `AudioContext` was still not running (common on iOS).
+  - `AudioEngine.ensureStarted()` now returns `Promise<boolean>` and confirms running state before reporting success.
+  - Added pending-start guard to prevent concurrent resume races.
+  - Added `webkitAudioContext` constructor fallback for older Safari/WebKit environments.
+  - Added iOS unlock warmup (`1-frame` silent buffer source) after successful resume.
+  - Unlock listeners now stay active until audio actually starts; removed only after `ensureStarted()` resolves `true`.
+  - Expanded unlock triggers for iOS: `pointerdown`, `touchstart`, `touchend`, `click`, and `keydown`.
+  - Updated unlock-listener gating to run when either music or effects are enabled (not only music).
+  - Hardened `playPop()` so if context is suspended it first awaits `ensureStarted()` and then plays, instead of scheduling while suspended.
+- Verification:
+  - `npm run build` passes.
+  - Playwright smoke run after patch captured `output/web-game-ios-audio-fix/shot-0.png` and emitted no `errors-0.json`.
+  - Note: headless desktop checks cannot prove iPhone speaker output; device validation is still required.
+- Follow-up iPhone/DuckDuckGo compatibility hardening in `src/audio/AudioProvider.tsx`.
+  - `ensureStarted()` now performs up to 3 resume attempts with short delay between tries for stricter iOS in-app WebKit behavior.
+  - Added lifecycle resume hooks while audio is enabled: `focus`, `pageshow`, and `visibilitychange` (when returning to visible).
+  - Goal: recover from iOS WebView suspend/interrupted states and improve first-play reliability in DuckDuckGo browser.
+- Verification: `npm run build` passes.
+- Additional iPhone (Safari + DuckDuckGo WebKit) audio fallback pass in `src/audio/AudioProvider.tsx` after user reported no sound on iPhone 11 across browsers.
+  - Added context teardown/rebuild retry when `resume()` attempts still leave context suspended.
+  - Added direct document-level capture listeners for unlock (`pointerdown/up`, `touchstart/end`, `click`) in addition to window listeners.
+  - Switched gesture unlock listeners to non-passive form to maximize compatibility with strict iOS transient-activation handling.
+  - Ensured all newly added document listeners are removed correctly in cleanup.
+- Verification:
+  - `npm run build` passes.
+  - Playwright smoke run captured `output/web-game-ios-audio-fix-2/shot-0.png` with no `errors-0.json` artifact.

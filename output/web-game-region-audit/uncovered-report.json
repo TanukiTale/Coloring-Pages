@@ -1,0 +1,317 @@
+[
+  {
+    "pictureId": "nature-bonus-emerald-fort",
+    "difficulty": "challenge",
+    "regionCount": 23,
+    "uncoveredPixels": 8504,
+    "uncoveredRatio": 0.12884848484848485
+  },
+  {
+    "pictureId": "nature-meadow-song",
+    "difficulty": "challenge",
+    "regionCount": 23,
+    "uncoveredPixels": 8438,
+    "uncoveredRatio": 0.12784848484848485
+  },
+  {
+    "pictureId": "nature-waterfall-hollow",
+    "difficulty": "challenge",
+    "regionCount": 23,
+    "uncoveredPixels": 8387,
+    "uncoveredRatio": 0.12707575757575756
+  },
+  {
+    "pictureId": "nature-forest-trail",
+    "difficulty": "challenge",
+    "regionCount": 23,
+    "uncoveredPixels": 8324,
+    "uncoveredRatio": 0.12612121212121213
+  },
+  {
+    "pictureId": "nature-sunset-grove",
+    "difficulty": "challenge",
+    "regionCount": 23,
+    "uncoveredPixels": 8238,
+    "uncoveredRatio": 0.12481818181818181
+  },
+  {
+    "pictureId": "nature-bonus-emerald-fort",
+    "difficulty": "medium",
+    "regionCount": 15,
+    "uncoveredPixels": 7476,
+    "uncoveredRatio": 0.11327272727272727
+  },
+  {
+    "pictureId": "nature-meadow-song",
+    "difficulty": "medium",
+    "regionCount": 15,
+    "uncoveredPixels": 7400,
+    "uncoveredRatio": 0.11212121212121212
+  },
+  {
+    "pictureId": "nature-waterfall-hollow",
+    "difficulty": "medium",
+    "regionCount": 15,
+    "uncoveredPixels": 7376,
+    "uncoveredRatio": 0.11175757575757576
+  },
+  {
+    "pictureId": "nature-forest-trail",
+    "difficulty": "medium",
+    "regionCount": 15,
+    "uncoveredPixels": 7346,
+    "uncoveredRatio": 0.1113030303030303
+  },
+  {
+    "pictureId": "nature-sunset-grove",
+    "difficulty": "medium",
+    "regionCount": 15,
+    "uncoveredPixels": 7288,
+    "uncoveredRatio": 0.11042424242424242
+  },
+  {
+    "pictureId": "nature-bonus-emerald-fort",
+    "difficulty": "easy",
+    "regionCount": 8,
+    "uncoveredPixels": 3719,
+    "uncoveredRatio": 0.05634848484848485
+  },
+  {
+    "pictureId": "nature-meadow-song",
+    "difficulty": "easy",
+    "regionCount": 8,
+    "uncoveredPixels": 3659,
+    "uncoveredRatio": 0.05543939393939394
+  },
+  {
+    "pictureId": "nature-waterfall-hollow",
+    "difficulty": "easy",
+    "regionCount": 8,
+    "uncoveredPixels": 3632,
+    "uncoveredRatio": 0.055030303030303034
+  },
+  {
+    "pictureId": "nature-forest-trail",
+    "difficulty": "easy",
+    "regionCount": 8,
+    "uncoveredPixels": 3608,
+    "uncoveredRatio": 0.05466666666666667
+  },
+  {
+    "pictureId": "nature-sunset-grove",
+    "difficulty": "easy",
+    "regionCount": 8,
+    "uncoveredPixels": 3579,
+    "uncoveredRatio": 0.05422727272727273
+  },
+  {
+    "pictureId": "space-launch-day",
+    "difficulty": "easy",
+    "regionCount": 10,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-launch-day",
+    "difficulty": "medium",
+    "regionCount": 18,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-launch-day",
+    "difficulty": "challenge",
+    "regionCount": 25,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-moon-drift",
+    "difficulty": "easy",
+    "regionCount": 10,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-moon-drift",
+    "difficulty": "medium",
+    "regionCount": 18,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-moon-drift",
+    "difficulty": "challenge",
+    "regionCount": 25,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-orbit-hub",
+    "difficulty": "easy",
+    "regionCount": 10,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-orbit-hub",
+    "difficulty": "medium",
+    "regionCount": 18,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-orbit-hub",
+    "difficulty": "challenge",
+    "regionCount": 25,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-starlight-dunes",
+    "difficulty": "easy",
+    "regionCount": 10,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-starlight-dunes",
+    "difficulty": "medium",
+    "regionCount": 18,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-starlight-dunes",
+    "difficulty": "challenge",
+    "regionCount": 25,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-bonus-nebula-crown",
+    "difficulty": "easy",
+    "regionCount": 10,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-bonus-nebula-crown",
+    "difficulty": "medium",
+    "regionCount": 18,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "space-bonus-nebula-crown",
+    "difficulty": "challenge",
+    "regionCount": 25,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-hidden-cove",
+    "difficulty": "easy",
+    "regionCount": 10,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-hidden-cove",
+    "difficulty": "medium",
+    "regionCount": 18,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-hidden-cove",
+    "difficulty": "challenge",
+    "regionCount": 26,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-map-room",
+    "difficulty": "easy",
+    "regionCount": 10,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-map-room",
+    "difficulty": "medium",
+    "regionCount": 18,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-map-room",
+    "difficulty": "challenge",
+    "regionCount": 26,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-storm-sloop",
+    "difficulty": "easy",
+    "regionCount": 10,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-storm-sloop",
+    "difficulty": "medium",
+    "regionCount": 18,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-storm-sloop",
+    "difficulty": "challenge",
+    "regionCount": 26,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-skull-shore",
+    "difficulty": "easy",
+    "regionCount": 10,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-skull-shore",
+    "difficulty": "medium",
+    "regionCount": 18,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-skull-shore",
+    "difficulty": "challenge",
+    "regionCount": 26,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-bonus-golden-armada",
+    "difficulty": "easy",
+    "regionCount": 10,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-bonus-golden-armada",
+    "difficulty": "medium",
+    "regionCount": 18,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  },
+  {
+    "pictureId": "pirates-bonus-golden-armada",
+    "difficulty": "challenge",
+    "regionCount": 26,
+    "uncoveredPixels": 0,
+    "uncoveredRatio": 0
+  }
+]

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getThemeById, getThemeBonusPicture, getThemeRegularPictures } from '../data/library';
-import { Picture } from '../models/domain';
-import { getThemeProgressByThemeId } from '../services/storage';
+import { PaintingSession, Picture } from '../models/domain';
+import { getLatestSessionMapByThemeId, getThemeProgressByThemeId } from '../services/storage';
 import { takeRandom } from '../utils/random';
 import { PictureCard } from '../components/PictureCard';
 
-const SET_SIZE = 3;
+const SET_SIZE = 4;
 
 export const ThemeGalleryPage = (): JSX.Element => {
   const { themeId } = useParams<{ themeId: string }>();
@@ -16,6 +16,7 @@ export const ThemeGalleryPage = (): JSX.Element => {
   const regularPictures = useMemo(() => (themeId ? getThemeRegularPictures(themeId) : []), [themeId]);
 
   const [displayedPictures, setDisplayedPictures] = useState<Picture[]>([]);
+  const [latestByPictureId, setLatestByPictureId] = useState<Record<string, PaintingSession>>({});
 
   const progress = themeId ? getThemeProgressByThemeId(themeId) : undefined;
   const bonusPicture = themeId ? getThemeBonusPicture(themeId) : undefined;
@@ -31,6 +32,29 @@ export const ThemeGalleryPage = (): JSX.Element => {
     setDisplayedPictures(takeRandom(regularPictures, SET_SIZE));
   }, [themeId, regularPictures]);
 
+  useEffect(() => {
+    if (!themeId) {
+      setLatestByPictureId({});
+      return;
+    }
+
+    setLatestByPictureId(getLatestSessionMapByThemeId(themeId));
+  }, [themeId]);
+
+  const openPicture = (pictureId: string): void => {
+    if (!themeId) {
+      return;
+    }
+
+    const latestSession = latestByPictureId[pictureId];
+    if (latestSession && !latestSession.completed) {
+      navigate(`/paint/${latestSession.id}`);
+      return;
+    }
+
+    navigate(`/theme/${themeId}/pick?pictureId=${pictureId}`);
+  };
+
   if (!theme || !themeId) {
     return (
       <section className="screen">
@@ -45,39 +69,29 @@ export const ThemeGalleryPage = (): JSX.Element => {
   return (
     <section className="screen">
       <div className="screen__head">
-        <h1>{theme.name} Gallery</h1>
+        <h1>{theme.name} Theme</h1>
         <p>{theme.description}</p>
-        <p className="muted-text">
-          Bonus progress: {unlockedQuadrants}/4 quadrants unlocked
-          {bonusUnlocked ? ' (ready!)' : ''}
-        </p>
+        <p className="muted-text">Bonus progress: {unlockedQuadrants}/4 quadrants unlocked</p>
       </div>
 
       {bonusUnlocked && bonusPicture ? (
         <div className="bonus-card-wrap">
           <PictureCard
             picture={bonusPicture}
+            session={latestByPictureId[bonusPicture.id]}
             badge="Bonus"
-            onSelect={() => navigate(`/theme/${themeId}/pick?pictureId=${bonusPicture.id}`)}
+            onSelect={() => openPicture(bonusPicture.id)}
           />
         </div>
       ) : null}
-
-      <div className="row-actions">
-        <button className="ghost-btn" onClick={() => setDisplayedPictures(takeRandom(regularPictures, SET_SIZE))}>
-          Generate New Set
-        </button>
-        <Link className="inline-link" to="/gallery">
-          View My Gallery
-        </Link>
-      </div>
 
       <div className="picture-grid">
         {displayedPictures.map((picture) => (
           <PictureCard
             key={picture.id}
             picture={picture}
-            onSelect={() => navigate(`/theme/${themeId}/pick?pictureId=${picture.id}`)}
+            session={latestByPictureId[picture.id]}
+            onSelect={() => openPicture(picture.id)}
           />
         ))}
       </div>

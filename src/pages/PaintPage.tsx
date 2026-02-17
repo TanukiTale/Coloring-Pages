@@ -19,6 +19,7 @@ import { PaintingCanvas } from '../components/PaintingCanvas';
 import { ProgressMeter } from '../components/ProgressMeter';
 import { CelebrationOverlay } from '../components/CelebrationOverlay';
 import { BonusRevealModal } from '../components/BonusRevealModal';
+import { useAudio } from '../audio/AudioProvider';
 
 const paletteColors = [
   '#ff595e',
@@ -30,11 +31,13 @@ const paletteColors = [
   '#6a4c93',
   '#f15bb5',
   '#6f4e37',
-  '#f8f9fa',
+  '#f1eee6',
   '#343a40',
 ];
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 5;
 
 export const PaintPage = (): JSX.Element => {
   // TODO: Add a selectable music system per theme with mute/volume controls.
@@ -48,6 +51,7 @@ export const PaintPage = (): JSX.Element => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [showCelebration, setShowCelebration] = useState(false);
   const [bonusReveal, setBonusReveal] = useState<BonusRevealEvent | undefined>();
+  const { playPop, setMusicTheme } = useAudio();
 
   const svgRef = useRef<SVGSVGElement | null>(null);
 
@@ -64,6 +68,14 @@ export const PaintPage = (): JSX.Element => {
 
   const variant = picture && session ? picture.variants[session.difficulty] : undefined;
   const progress = session && variant ? getPaintProgress(session, variant) : undefined;
+
+  useEffect(() => {
+    if (!theme?.id) {
+      return;
+    }
+
+    setMusicTheme(theme.id);
+  }, [setMusicTheme, theme?.id]);
 
   useEffect(() => {
     if (!session || !progress || !theme || !picture) {
@@ -124,30 +136,23 @@ export const PaintPage = (): JSX.Element => {
 
       if (event.key === '+' || event.key === '=') {
         event.preventDefault();
-        setZoom((current) => clamp(current + 0.2, 0.6, 3));
+        updateZoom(zoom + 0.2);
       }
 
       if (event.key === '-' || event.key === '_') {
         event.preventDefault();
-        setZoom((current) => {
-          const next = clamp(current - 0.2, 0.6, 3);
-          if (next <= 1) {
-            setPan({ x: 0, y: 0 });
-          }
-          return next;
-        });
+        updateZoom(zoom - 0.2);
       }
 
       if (event.key === '0') {
         event.preventDefault();
-        setZoom(1);
-        setPan({ x: 0, y: 0 });
+        updateZoom(1);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [session]);
+  }, [session, zoom]);
 
   if (!sessionId || !session || !picture || !theme || !variant || !progress) {
     return (
@@ -161,14 +166,24 @@ export const PaintPage = (): JSX.Element => {
   }
 
   const updateZoom = (nextZoom: number): void => {
-    const clamped = clamp(nextZoom, 0.6, 3);
+    const clamped = clamp(nextZoom, MIN_ZOOM, MAX_ZOOM);
+    setZoom(clamped);
+    setPan({ x: 0, y: 0 });
+  };
+
+  const updateZoomAndPan = (nextZoom: number, nextPan: { x: number; y: number }): void => {
+    const clamped = clamp(nextZoom, MIN_ZOOM, MAX_ZOOM);
     setZoom(clamped);
     if (clamped <= 1) {
       setPan({ x: 0, y: 0 });
+      return;
     }
+
+    setPan(nextPan);
   };
 
   const handleFillRegion = (regionId: string): void => {
+    playPop();
     const updated = fillRegion(session.id, regionId, selectedColor);
     if (updated) {
       setSession(updated);
@@ -247,6 +262,40 @@ export const PaintPage = (): JSX.Element => {
       </div>
 
       <div className="paint-layout">
+        <div className="paint-layout__canvas">
+          <div className="paint-zoom-control">
+            <label htmlFor="paint-zoom-slider">Zoom</label>
+            <input
+              id="paint-zoom-slider"
+              type="range"
+              min={MIN_ZOOM * 100}
+              max={MAX_ZOOM * 100}
+              step={10}
+              value={Math.round(zoom * 100)}
+              onChange={(event) => {
+                updateZoom(Number(event.target.value) / 100);
+              }}
+            />
+            <output className="paint-zoom-control__value" aria-live="polite">
+              {Math.round(zoom * 100)}%
+            </output>
+          </div>
+          <PaintingCanvas
+            ref={svgRef}
+            variant={variant}
+            fills={session.fills}
+            backgroundColor={session.backgroundColor}
+            zoom={zoom}
+            pan={pan}
+            onPanChange={setPan}
+            onZoomAndPanChange={updateZoomAndPan}
+            minZoom={MIN_ZOOM}
+            maxZoom={MAX_ZOOM}
+            onFillRegion={handleFillRegion}
+            onFillBackground={handleFillBackground}
+          />
+        </div>
+
         <aside className="paint-layout__left">
           <h2>Palette</h2>
           <Palette colors={paletteColors} selectedColor={selectedColor} onSelect={setSelectedColor} />
@@ -265,32 +314,10 @@ export const PaintPage = (): JSX.Element => {
             zoom={zoom}
           />
 
-          <div className="keyboard-help">
-            <p>Shortcuts:</p>
-            <p>Undo: Ctrl/Cmd + Z</p>
-            <p>Redo: Ctrl/Cmd + Shift + Z or Ctrl/Cmd + Y</p>
-            <p>Zoom: + / - / 0</p>
-          </div>
-
           <Link className="inline-link" to={`/theme/${theme.id}`}>
             Exit Painting
           </Link>
         </aside>
-
-        <div className="paint-layout__canvas">
-          <PaintingCanvas
-            ref={svgRef}
-            variant={variant}
-            fills={session.fills}
-            backgroundColor={session.backgroundColor}
-            selectedColor={selectedColor}
-            zoom={zoom}
-            pan={pan}
-            onPanChange={setPan}
-            onFillRegion={handleFillRegion}
-            onFillBackground={handleFillBackground}
-          />
-        </div>
       </div>
 
       {showCelebration ? (

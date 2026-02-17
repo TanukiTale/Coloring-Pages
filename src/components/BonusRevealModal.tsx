@@ -32,7 +32,12 @@ export const BonusRevealModal = ({
         <h2>Bonus Quadrant Reveal</h2>
         <p>{message}</p>
         <div className="bonus-modal__preview-wrap">
-          <SvgThumbnail variant={bonusVariant} className="bonus-modal__preview" />
+          <SvgThumbnail
+            variant={bonusVariant}
+            className="bonus-modal__preview"
+            backgroundColor="#ffffff"
+            colorfulUnfilled={false}
+          />
           <div className="bonus-modal__grid">
             {quadrants.map((quadrant) => {
               const isRevealed = quadrant <= reveal.unlockedQuadrants;

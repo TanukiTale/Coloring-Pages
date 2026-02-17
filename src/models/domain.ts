@@ -51,6 +51,7 @@ export interface PaintingSession {
   completed: boolean;
   fills: RegionFillStates;
   backgroundColor: string;
+  archivedFromTheme?: boolean;
   undoStack: PaintSnapshot[];
   redoStack: PaintSnapshot[];
 }

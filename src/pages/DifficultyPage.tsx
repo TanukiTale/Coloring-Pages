@@ -2,15 +2,9 @@ import { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { difficultyLabels, getPictureById, getThemeById } from '../data/library';
 import { Difficulty } from '../models/domain';
-import { createPaintingSession } from '../services/storage';
+import { createPaintingSession, getLatestInProgressSessionByPictureAndDifficulty } from '../services/storage';
 import { DifficultySelector } from '../components/DifficultySelector';
 import { SvgThumbnail } from '../components/SvgThumbnail';
-
-const themeBackgrounds: Record<string, string> = {
-  nature: '#edf8ec',
-  space: '#e8ecff',
-  pirates: '#fff2de',
-};
 
 export const DifficultyPage = (): JSX.Element => {
   const { themeId } = useParams<{ themeId: string }>();
@@ -22,6 +16,10 @@ export const DifficultyPage = (): JSX.Element => {
   const theme = useMemo(() => (themeId ? getThemeById(themeId) : undefined), [themeId]);
 
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
+  const existingSession = useMemo(
+    () => (picture ? getLatestInProgressSessionByPictureAndDifficulty(picture.id, difficulty) : undefined),
+    [difficulty, picture]
+  );
 
   if (!theme || !picture) {
     return (
@@ -35,11 +33,16 @@ export const DifficultyPage = (): JSX.Element => {
   }
 
   const startPainting = (): void => {
+    if (existingSession) {
+      navigate(`/paint/${existingSession.id}`);
+      return;
+    }
+
     const session = createPaintingSession({
       themeId: theme.id,
       pictureId: picture.id,
       difficulty,
-      initialBackground: themeBackgrounds[theme.id] ?? '#f4f7ff',
+      initialBackground: '#ffffff',
     });
 
     navigate(`/paint/${session.id}`);
@@ -58,7 +61,7 @@ export const DifficultyPage = (): JSX.Element => {
           <DifficultySelector value={difficulty} onChange={setDifficulty} />
 
           <button className="primary-btn" onClick={startPainting}>
-            Start Painting ({difficultyLabels[difficulty]})
+            {existingSession ? `Resume Painting (${difficultyLabels[difficulty]})` : `Start Painting (${difficultyLabels[difficulty]})`}
           </button>
 
           <Link className="inline-link" to={`/theme/${theme.id}`}>
@@ -67,7 +70,7 @@ export const DifficultyPage = (): JSX.Element => {
         </div>
 
         <div className="difficulty-layout__right">
-          <SvgThumbnail variant={picture.variants[difficulty]} className="difficulty-preview" colorfulUnfilled />
+          <SvgThumbnail variant={picture.variants[difficulty]} className="difficulty-preview" colorfulUnfilled={false} />
           <p className="muted-text">Preview updates as segmentation changes.</p>
         </div>
       </div>
